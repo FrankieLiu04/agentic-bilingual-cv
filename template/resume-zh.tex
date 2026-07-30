@@ -1,0 +1,56 @@
+%!TEX program = xelatex
+\documentclass[chinese]{cv}
+
+% 必须显式设置 metadata，避免生成的 PDF 继承其他用户的信息。
+\cvsetmetadata{示例候选人}{示例候选人 - 简历}
+
+\begin{document}
+
+\cvheader
+  {示例候选人}
+  {职业方向}
+  {所在城市 \cvsep 联系方式 \cvsep 个人主页}
+
+\cvsection{教育经历}
+
+\cventry
+  {学校名称}
+  {开始时间 -- 结束时间}
+  {学位与专业}
+  {地点}
+
+\begin{cvitems}
+  \item 请用经过确认的教育经历替换本行。
+\end{cvitems}
+
+\cvsection{工作经历}
+
+\cventry
+  {机构名称}
+  {开始时间 -- 结束时间}
+  {职位名称}
+  {地点}
+
+\begin{cvitems}
+  \item 请用基于事实、突出结果的经历描述替换本行。
+  \item 不得添加用户未确认的数字、经历或成果。
+\end{cvitems}
+
+\cvsection{项目经历}
+
+\cventry
+  {项目名称}
+  {年份}
+  {技术或项目背景}
+  {}
+
+\begin{cvitems}
+  \item 简洁描述经过确认的问题、行动与结果。
+\end{cvitems}
+
+\cvsection{技能}
+
+\cvskill{语言能力}{请填写经过确认的语言水平。}
+\cvskill{专业技能}{请填写经过确认的工具与技术。}
+
+\end{document}

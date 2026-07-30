@@ -1,0 +1,440 @@
+schema_version: "1.0"
+
+document:
+  id: avery_lin_fictional
+  fictional: true
+  target_pages: 1
+
+workflow:
+  status: render_ready
+  notes:
+    en: Entirely fictional public data for schema and template testing.
+    zh: 用于 schema 与模板测试的完全虚构公开数据。
+
+sources:
+  - id: fictional_brief
+    kind: fictional
+    private: false
+    description:
+      en: Invented M2 scenario; not derived from any real resume.
+      zh: M2 阶段创作的虚构情境，并非来自任何真实简历。
+
+metrics:
+  - id: gpa
+    value: 3.8
+    unit: gpa_of_4
+    label:
+      en: GPA
+      zh: 平均绩点
+    display:
+      en: 3.8/4.0
+      zh: 3.8/4.0
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: daily_records
+    value: 2000000
+    unit: records_per_day
+    display:
+      en: 2 million records per day
+      zh: 每日 200 万条记录
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: triage_reduction
+    value: 35
+    unit: percent
+    display:
+      en: 35%
+      zh: 35%
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: coverage_before
+    value: 62
+    unit: percent
+    display:
+      en: 62%
+      zh: 62%
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: coverage_after
+    value: 86
+    unit: percent
+    display:
+      en: 86%
+      zh: 86%
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: operations_team_size
+    value: 8
+    unit: people
+    display:
+      en: 8-person team
+      zh: 8 人团队
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: report_time_before
+    value: 4
+    unit: hours
+    display:
+      en: 4 hours
+      zh: 4 小时
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: report_time_after
+    value: 45
+    unit: minutes
+    display:
+      en: 45 minutes
+      zh: 45 分钟
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: indexed_abstracts
+    value: 12000
+    unit: abstracts
+    display:
+      en: 12,000 synthetic abstracts
+      zh: 12,000 篇合成摘要
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: retrieval_before
+    value: 71
+    unit: percent
+    display:
+      en: 71%
+      zh: 71%
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: retrieval_after
+    value: 84
+    unit: percent
+    display:
+      en: 84%
+      zh: 84%
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: automated_tests
+    value: 48
+    unit: tests
+    display:
+      en: 48 automated tests
+      zh: 48 项自动化测试
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: topology_nodes
+    value: 50
+    unit: nodes
+    display:
+      en: 50-node topologies
+      zh: 50 节点拓扑
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: generated_scenarios
+    value: 120
+    unit: scenarios
+    display:
+      en: 120 generated scenarios
+      zh: 120 个生成场景
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: workshops
+    value: 6
+    unit: workshops
+    display:
+      en: 6 workshops
+      zh: 6 场工作坊
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: workshop_students
+    value: 90
+    unit: students
+    display:
+      en: 90 students
+      zh: 90 名学生
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+  - id: feedback_score
+    value: 4.7
+    unit: score_of_5
+    display:
+      en: 4.7/5
+      zh: 4.7/5
+    verification:
+      status: fictional
+      source_refs: [fictional_brief]
+
+basics:
+  name:
+    en: Avery Lin
+    zh: 林艾文
+  headline:
+    en: Software Engineer
+    zh: 软件工程师
+  location:
+    en: Port Aurora
+    zh: 曙港
+  contacts:
+    - type: email
+      value: avery.lin@example.com
+      href: mailto:avery.lin@example.com
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+    - type: website
+      value: example.com/avery-lin
+      href: https://example.com/avery-lin
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+  verification:
+    status: fictional
+    source_refs: [fictional_brief]
+
+sections:
+  education:
+    - id: education_aster_vale
+      institution:
+        en: Aster Vale Institute of Technology
+        zh: 星谷理工学院
+      date:
+        start: "2021"
+        end: "2025"
+      degree:
+        en: B.Eng. in Computer Engineering
+        zh: 计算机工程学士
+      location:
+        en: Port Aurora
+        zh: 曙港
+      highlights:
+        - id: education_coursework
+          text:
+            en: "Coursework: Data Structures, Distributed Systems, Databases, and Human-Computer Interaction."
+            zh: 核心课程：数据结构、分布式系统、数据库与人机交互。
+          metric_refs: []
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+      metric_refs: [gpa]
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+  experience:
+    - id: experience_lumenarc
+      organization:
+        en: LumenArc Systems
+        zh: 流光系统
+      role:
+        en: Software Engineering Intern
+        zh: 软件工程实习生
+      date:
+        start: "2024-05"
+        end: "2024-08"
+      location:
+        en: Port Aurora
+        zh: 曙港
+      highlights:
+        - id: lumenarc_validation
+          text:
+            en: Built a Python event-validation service that processed 2 million simulated records per day and reduced manual triage time by 35%.
+            zh: 构建 Python 事件验证服务，每日处理 200 万条模拟记录，将人工分流时间缩短 35%。
+          metric_refs: [daily_records, triage_reduction]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+        - id: lumenarc_testing
+          text:
+            en: Added contract and failure-path tests, increasing integration-test coverage from 62% to 86%.
+            zh: 补充契约与故障路径测试，将集成测试覆盖率从 62% 提升至 86%。
+          metric_refs: [coverage_before, coverage_after]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+    - id: experience_cobalt_kite
+      organization:
+        en: Cobalt Kite Studio
+        zh: 苍鸢工作室
+      role:
+        en: Product Engineering Intern
+        zh: 产品工程实习生
+      date:
+        start: "2023-06"
+        end: "2023-08"
+      location:
+        en: Port Aurora
+        zh: 曙港
+      highlights:
+        - id: cobalt_dashboard
+          text:
+            en: Delivered a React operations dashboard for an 8-person team, cutting weekly report preparation from 4 hours to 45 minutes.
+            zh: 为 8 人运营团队交付 React 仪表板，将每周报告准备时间从 4 小时缩短至 45 分钟。
+          metric_refs: [operations_team_size, report_time_before, report_time_after]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+        - id: cobalt_accessibility
+          text:
+            en: Reworked keyboard navigation and status labels to satisfy the team's internal accessibility checklist.
+            zh: 重构键盘导航与状态标签，满足团队内部无障碍检查清单要求。
+          metric_refs: []
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+  projects:
+    - id: project_atlasnote
+      name:
+        en: AtlasNote - Bilingual Research Assistant
+        zh: AtlasNote 双语研究助手
+      date:
+        start: "2024"
+        end: "2024"
+      technologies: [FastAPI, PostgreSQL, React, Docker]
+      highlights:
+        - id: atlasnote_retrieval
+          text:
+            en: Indexed 12,000 synthetic abstracts and improved top-5 retrieval hit rate from 71% to 84% through query expansion.
+            zh: 索引 12,000 篇合成摘要，通过查询扩展将前五项检索命中率从 71% 提升至 84%。
+          metric_refs: [indexed_abstracts, retrieval_before, retrieval_after]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+        - id: atlasnote_delivery
+          text:
+            en: Added bilingual citation previews, reproducible containers, and continuous integration for 48 automated tests.
+            zh: 实现双语引文预览、可复现容器环境及覆盖 48 项自动化测试的持续集成。
+          metric_refs: [automated_tests]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+    - id: project_meshroute
+      name:
+        en: MeshRoute Network Lab
+        zh: MeshRoute 网络实验台
+      date:
+        start: "2023"
+        end: "2023"
+      technologies: [Python, NetworkX]
+      highlights:
+        - id: meshroute_simulation
+          text:
+            en: Visualized shortest paths and failure recovery across 50-node simulated topologies; verified behavior with 120 generated scenarios.
+            zh: 可视化 50 节点模拟拓扑的最短路径与故障恢复，并通过 120 个生成场景验证行为。
+          metric_refs: [topology_nodes, generated_scenarios]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+  activities:
+    - id: activity_open_lab
+      organization:
+        en: Open Computing Lab
+        zh: 开放计算实验室
+      role:
+        en: Peer Mentor
+        zh: 朋辈导师
+      date:
+        start: "2022"
+        end: "2024"
+      location:
+        en: Port Aurora
+        zh: 曙港
+      highlights:
+        - id: open_lab_workshops
+          text:
+            en: Led 6 debugging workshops for 90 students, earning an average feedback score of 4.7/5.
+            zh: 为 90 名学生主持 6 场调试工作坊，平均反馈评分为 4.7/5。
+          metric_refs: [workshops, workshop_students, feedback_score]
+          verification:
+            status: fictional
+            source_refs: [fictional_brief]
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+  skills:
+    - id: skills_programming
+      label:
+        en: Programming
+        zh: 编程语言
+      items:
+        - {en: Python, zh: Python}
+        - {en: TypeScript, zh: TypeScript}
+        - {en: SQL, zh: SQL}
+        - {en: Java, zh: Java}
+        - {en: Bash, zh: Bash}
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+    - id: skills_tools
+      label:
+        en: Tools
+        zh: 工具平台
+      items:
+        - {en: Git, zh: Git}
+        - {en: Docker, zh: Docker}
+        - {en: PostgreSQL, zh: PostgreSQL}
+        - {en: Linux, zh: Linux}
+        - {en: GitHub Actions, zh: GitHub Actions}
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+    - id: skills_languages
+      label:
+        en: Languages
+        zh: 语言能力
+      items:
+        - {en: English (fluent), zh: 英语（流利）}
+        - {en: Mandarin Chinese (fluent), zh: 普通话（流利）}
+      verification:
+        status: fictional
+        source_refs: [fictional_brief]
+
+pending_questions: []
+unresolved_items: []

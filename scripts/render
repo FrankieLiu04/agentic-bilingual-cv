@@ -1,0 +1,209 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "Jinja2>=3.1,<4",
+#   "jsonschema>=4.23,<5",
+#   "PyYAML>=6.0,<7",
+# ]
+# ///
+"""Generate editable bilingual LaTeX and compile PDFs with XeLaTeX."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+from lib.latex_render import render_latex
+from lib.resume_data import ResumeDataError, validate_resume
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_SCHEMA = REPO_ROOT / "data/schema/resume.schema.json"
+TEMPLATE_DIR = REPO_ROOT / "template"
+VALIDATOR = REPO_ROOT / "scripts/validate"
+
+
+class RenderError(RuntimeError):
+    """Raised when LaTeX generation, compilation, or validation fails."""
+
+
+def write_if_changed(path: Path, content: str, force: bool) -> None:
+    if path.exists() and path.read_text(encoding="utf-8") == content:
+        return
+    if path.exists() and not force:
+        raise RenderError(
+            f"refusing to overwrite edited file {path}; "
+            "use --force or choose another output directory"
+        )
+    path.write_text(content, encoding="utf-8")
+
+
+def copy_if_changed(source: Path, destination: Path, force: bool) -> None:
+    if destination.exists() and destination.read_bytes() == source.read_bytes():
+        return
+    if destination.exists() and not force:
+        raise RenderError(
+            f"refusing to overwrite edited file {destination}; "
+            "use --force or choose another output directory"
+        )
+    shutil.copy2(source, destination)
+
+
+def compile_tex(tex: Path, build_dir: Path) -> Path:
+    for suffix in (".aux", ".log", ".out", ".pdf"):
+        stale = build_dir / f"{tex.stem}{suffix}"
+        if stale.exists():
+            stale.unlink()
+
+    command = [
+        "xelatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-file-line-error",
+        f"-output-directory={build_dir}",
+        tex.name,
+    ]
+    for _ in range(2):
+        result = subprocess.run(
+            command,
+            cwd=tex.parent,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        if result.returncode != 0:
+            raise RenderError(
+                f"XeLaTeX failed for {tex}:\n{result.stdout[-6000:]}"
+            )
+
+    pdf = build_dir / f"{tex.stem}.pdf"
+    if not pdf.is_file():
+        raise RenderError(f"XeLaTeX did not create {pdf}")
+    return pdf
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate editable English and Chinese LaTeX, then compile and "
+            "validate PDFs directly with XeLaTeX."
+        )
+    )
+    parser.add_argument("data", type=Path, help="Structured resume YAML")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=REPO_ROOT / "output",
+        help="Destination for editable .tex and final PDFs",
+    )
+    parser.add_argument(
+        "--build-dir",
+        type=Path,
+        help="Destination for LaTeX intermediate files",
+    )
+    parser.add_argument(
+        "--schema",
+        type=Path,
+        default=DEFAULT_SCHEMA,
+        help="JSON Schema path",
+    )
+    parser.add_argument(
+        "--tex-only",
+        action="store_true",
+        help="Generate editable LaTeX without compiling PDFs",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing generated LaTeX or class files",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    data_path = args.data.resolve()
+    output_dir = args.output_dir.resolve()
+
+    try:
+        data = validate_resume(data_path, args.schema.resolve())
+        if data["workflow"]["status"] != "render_ready":
+            raise RenderError(
+                "only render_ready data can be rendered; resolve review items first"
+            )
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+        class_destination = output_dir / "cv.cls"
+        copy_if_changed(TEMPLATE_DIR / "cv.cls", class_destination, args.force)
+
+        tex_paths: list[Path] = []
+        for locale in ("en", "zh"):
+            destination = output_dir / f"resume-{locale}.tex"
+            write_if_changed(
+                destination,
+                render_latex(data, locale, TEMPLATE_DIR),
+                args.force,
+            )
+            tex_paths.append(destination)
+            print(f"wrote: {destination}")
+
+        if args.tex_only:
+            print("ok: LaTeX generated; PDF compilation skipped")
+            return 0
+
+        if shutil.which("xelatex") is None:
+            raise RenderError("xelatex is required to compile PDFs")
+
+        build_dir = (
+            args.build_dir.resolve()
+            if args.build_dir
+            else REPO_ROOT / "build/render" / data["document"]["id"]
+        )
+        build_dir.mkdir(parents=True, exist_ok=True)
+
+        pdf_paths: list[Path] = []
+        for tex in tex_paths:
+            built_pdf = compile_tex(tex, build_dir)
+            destination = output_dir / built_pdf.name
+            shutil.copy2(built_pdf, destination)
+            pdf_paths.append(destination)
+            print(f"wrote: {destination}")
+
+        validation_command = [
+            str(VALIDATOR),
+            "--expected-pages",
+            str(data["document"]["target_pages"]),
+            "--log-dir",
+            str(build_dir),
+            *(str(path) for path in pdf_paths),
+        ]
+        result = subprocess.run(
+            validation_command,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=os.environ.copy(),
+        )
+        report = result.stdout
+        report_path = output_dir / "validation-report.txt"
+        report_path.write_text(report, encoding="utf-8")
+        print(report, end="")
+        print(f"wrote: {report_path}")
+        if result.returncode != 0:
+            raise RenderError("PDF validation failed; see validation report")
+
+    except (ResumeDataError, RenderError, OSError) as exc:
+        print(f"render failed: {exc}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

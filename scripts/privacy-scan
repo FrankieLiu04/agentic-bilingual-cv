@@ -1,0 +1,167 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = []
+# ///
+"""Fail when public or staged files appear to contain private resume data."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+PROTECTED_PREFIXES = ("input/", "data/private/", "output/", "build/")
+PROTECTED_EXCEPTIONS = {
+    "input/README.md",
+    "data/private/README.md",
+    "output/README.md",
+}
+BINARY_RESUME_SUFFIXES = {".doc", ".docx", ".pdf"}
+EMAIL = re.compile(r"(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}")
+PHONE = re.compile(r"(?<!\d)(?:\+\d[\d ()-]{7,}\d)(?!\d)")
+HOME_PATH = re.compile(
+    r"(?:/"
+    + "Users/"
+    + r"|/"
+    + "home/"
+    + r"[^/\s]+/|[A-Za-z]:\\Users\\)"
+)
+PROFILE_URL = re.compile(
+    r"(?i)https?://(?:www\.)?(?:github\.com/[^/\s]+|linkedin\.com/in/[^/\s]+)"
+)
+ALLOWED_EMAIL_DOMAINS = {"example.com"}
+
+
+def git_paths(staged: bool) -> list[Path]:
+    if staged:
+        command = [
+            "git",
+            "diff",
+            "--cached",
+            "--name-only",
+            "--diff-filter=ACMR",
+            "-z",
+        ]
+    else:
+        command = [
+            "git",
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "-z",
+        ]
+    result = subprocess.run(
+        command,
+        cwd=REPO_ROOT,
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    return [
+        Path(value.decode("utf-8"))
+        for value in result.stdout.split(b"\0")
+        if value
+    ]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Scan public files for privacy leaks.")
+    parser.add_argument(
+        "--staged",
+        action="store_true",
+        help="Scan only staged files and reject protected paths",
+    )
+    parser.add_argument(
+        "--deny",
+        action="append",
+        default=[],
+        help="Additional case-insensitive private string to reject",
+    )
+    parser.add_argument(
+        "--deny-file",
+        action="append",
+        default=[],
+        type=Path,
+        help="Local file containing one additional private string per line",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    file_values: list[str] = []
+    try:
+        for path in args.deny_file:
+            file_values.extend(path.read_text(encoding="utf-8").splitlines())
+    except OSError as exc:
+        print(f"privacy scan failed: cannot read deny file: {exc}", file=sys.stderr)
+        return 1
+
+    deny_values = [
+        value.strip()
+        for value in (
+            args.deny
+            + file_values
+            + os.environ.get("PRIVACY_DENYLIST", "").split(os.pathsep)
+        )
+        if value.strip() and not value.lstrip().startswith("#")
+    ]
+    findings: list[str] = []
+    paths = git_paths(args.staged)
+
+    for relative in paths:
+        normalized = relative.as_posix()
+        absolute = REPO_ROOT / relative
+        if normalized.startswith(PROTECTED_PREFIXES):
+            if normalized not in PROTECTED_EXCEPTIONS:
+                findings.append(f"{normalized}: protected path must not be published")
+                continue
+        if relative.suffix.lower() in BINARY_RESUME_SUFFIXES:
+            findings.append(f"{normalized}: resume binary must not be published")
+            continue
+        if not absolute.is_file():
+            continue
+        try:
+            content = absolute.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+
+        if HOME_PATH.search(content):
+            findings.append(f"{normalized}: contains an absolute home path")
+
+        for match in EMAIL.finditer(content):
+            domain = match.group(0).rsplit("@", 1)[1].lower()
+            if domain not in ALLOWED_EMAIL_DOMAINS:
+                findings.append(f"{normalized}: contains a non-example email")
+                break
+
+        if PHONE.search(content):
+            findings.append(f"{normalized}: contains a probable phone number")
+
+        if PROFILE_URL.search(content):
+            findings.append(f"{normalized}: contains a personal profile URL")
+
+        lowered = content.casefold()
+        for value in deny_values:
+            if value.casefold() in lowered:
+                findings.append(f"{normalized}: contains a denied private string")
+                break
+
+    if findings:
+        print("privacy scan failed:", file=sys.stderr)
+        for finding in sorted(set(findings)):
+            print(f"- {finding}", file=sys.stderr)
+        return 1
+    scope = "staged files" if args.staged else "public candidate files"
+    print(f"ok: privacy scan passed ({scope}, {len(paths)} files)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

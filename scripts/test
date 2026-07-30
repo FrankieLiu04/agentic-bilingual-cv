@@ -1,0 +1,30 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "Jinja2>=3.1,<4",
+#   "jsonschema>=4.23,<5",
+#   "pytest>=8,<9",
+#   "python-docx>=1.1,<2",
+#   "PyYAML>=6.0,<7",
+# ]
+# ///
+"""Run the repository test suite."""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+if __name__ == "__main__":
+    raise SystemExit(
+        subprocess.call(
+            [sys.executable, "-m", "pytest", "-q", *sys.argv[1:]],
+            cwd=REPO_ROOT,
+        )
+    )

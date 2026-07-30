@@ -1,0 +1,54 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "jsonschema>=4.23,<5",
+#   "PyYAML>=6.0,<7",
+# ]
+# ///
+"""Validate resume YAML against its schema and semantic invariants."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+from lib.resume_data import ResumeDataError, validate_resume
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_SCHEMA = REPO_ROOT / "data/schema/resume.schema.json"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Validate bilingual resume YAML."
+    )
+    parser.add_argument("data", nargs="+", type=Path, help="Resume YAML file")
+    parser.add_argument(
+        "--schema",
+        type=Path,
+        default=DEFAULT_SCHEMA,
+        help="JSON Schema path",
+    )
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    try:
+        for path in args.data:
+            data = validate_resume(path.resolve(), args.schema.resolve())
+            print(
+                f"ok: {path} "
+                f"({len(data['sources'])} sources, {len(data['metrics'])} metrics)"
+            )
+    except ResumeDataError as exc:
+        print(exc, file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

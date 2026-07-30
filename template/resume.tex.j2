@@ -1,0 +1,97 @@
+%!TEX program = xelatex
+% Generated from structured resume data. Edit this file if manual refinement is needed.
+\documentclass[<< class_option >>]{cv}
+
+\cvsetmetadata{<< metadata_author >>}{<< metadata_title >>}
+
+\begin{document}
+
+\cvheader
+  {<< display_name >>}
+  {<< localized(data.basics.headline) >>}
+  {<% if data.basics.location is defined %><< localized(data.basics.location) >><% endif %><% for contact in data.basics.contacts %><% if data.basics.location is defined or not loop.first %> \cvsep<% endif %>
+   <% if contact.href is defined %>\href{<< tex_escape(contact.href) >>}{<< tex_escape(contact.value) >>}<% else %><< tex_escape(contact.value) >><% endif %><% endfor %>}
+
+<% if data.sections.education %>
+\cvsection{<< labels.education >>}
+
+<% for item in data.sections.education %>
+\cventry
+  {<< localized(item.institution) >>}
+  {<< date_text(item.date) >>}
+  {<< localized(item.degree) >><% if item.metric_refs %><% if locale == "en" %>; <% else %>；<% endif %><< metric_summary(item.metric_refs) >><% endif %>}
+  {<% if item.location is defined %><< localized(item.location) >><% endif %>}
+
+<% if item.highlights %>
+\begin{cvitems}
+<% for highlight in item.highlights %>
+  \item << localized(highlight.text) >>
+<% endfor %>
+\end{cvitems}
+<% endif %>
+<% endfor %>
+<% endif %>
+
+<% if data.sections.experience %>
+\cvsection{<< labels.experience >>}
+
+<% for item in data.sections.experience %>
+\cventry
+  {<< localized(item.organization) >>}
+  {<< date_text(item.date) >>}
+  {<< localized(item.role) >>}
+  {<% if item.location is defined %><< localized(item.location) >><% endif %>}
+
+\begin{cvitems}
+<% for highlight in item.highlights %>
+  \item << localized(highlight.text) >>
+<% endfor %>
+\end{cvitems}
+<% endfor %>
+<% endif %>
+
+<% if data.sections.projects %>
+\cvsection{<< labels.projects >>}
+
+<% for item in data.sections.projects %>
+\cventry
+  {<< localized(item.name) >>}
+  {<% if item.date is defined %><< date_text(item.date) >><% endif %>}
+  {<< technologies(item.technologies) >>}
+  {}
+
+\begin{cvitems}
+<% for highlight in item.highlights %>
+  \item << localized(highlight.text) >>
+<% endfor %>
+\end{cvitems}
+<% endfor %>
+<% endif %>
+
+<% if data.sections.activities %>
+\cvsection{<< labels.activities >>}
+
+<% for item in data.sections.activities %>
+\cventry
+  {<< localized(item.organization) >>}
+  {<< date_text(item.date) >>}
+  {<< localized(item.role) >>}
+  {<% if item.location is defined %><< localized(item.location) >><% endif %>}
+
+\begin{cvitems}
+<% for highlight in item.highlights %>
+  \item << localized(highlight.text) >>
+<% endfor %>
+\end{cvitems}
+<% endfor %>
+<% endif %>
+
+<% if data.sections.skills %>
+\cvsection{<< labels.skills >>}
+
+<% for group in data.sections.skills %>
+\cvskill{<< localized(group.label) >>}{<% for item in group["items"] %><< localized(item) >><% if not loop.last %><% if locale == "en" %>, <% else %>、<% endif %><% endif %><% endfor %>}
+<% endfor %>
+<% endif %>
+
+\end{document}

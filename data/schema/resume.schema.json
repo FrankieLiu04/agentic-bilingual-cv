@@ -1,0 +1,643 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/agentic-bilingual-cv/resume.schema.json",
+  "title": "Agentic Bilingual CV intermediate document",
+  "description": "Auditable bilingual resume data used to author editable LaTeX and compile PDFs with XeLaTeX.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "document",
+    "workflow",
+    "sources",
+    "metrics",
+    "basics",
+    "sections",
+    "pending_questions",
+    "unresolved_items"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fictional",
+        "target_pages"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "fictional": {
+          "type": "boolean"
+        },
+        "target_pages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "needs_review",
+            "render_ready"
+          ]
+        },
+        "notes": {
+          "$ref": "#/$defs/localizedText"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metric"
+      }
+    },
+    "basics": {
+      "$ref": "#/$defs/basics"
+    },
+    "sections": {
+      "$ref": "#/$defs/sections"
+    },
+    "pending_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pendingQuestion"
+      }
+    },
+    "unresolved_items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unresolvedItem"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "workflow": {
+            "properties": {
+              "status": {
+                "const": "render_ready"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pending_questions": {
+            "maxItems": 0
+          },
+          "unresolved_items": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "localizedText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "en",
+        "zh"
+      ],
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zh": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "dateValue": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{4}|[0-9]{4}-(?:0[1-9]|1[0-2])|present)$"
+    },
+    "dateRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/dateValue"
+        },
+        "end": {
+          "$ref": "#/$defs/dateValue"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "source_refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "confirmed",
+            "needs_confirmation",
+            "fictional"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "note": {
+          "$ref": "#/$defs/localizedText"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "private",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "docx",
+            "conversation",
+            "user_confirmation",
+            "fictional",
+            "other"
+          ]
+        },
+        "private": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "$ref": "#/$defs/localizedText"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "value",
+        "unit",
+        "display",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "display": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "label": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text",
+        "metric_refs",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "text": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "metric_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "value",
+        "verification"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "email",
+            "phone",
+            "website",
+            "linkedin",
+            "github",
+            "other"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "basics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "headline",
+        "contacts",
+        "verification"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "headline": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "location": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "contacts": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/contact"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "educationItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "institution",
+        "date",
+        "degree",
+        "highlights",
+        "metric_refs",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "institution": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "date": {
+          "$ref": "#/$defs/dateRange"
+        },
+        "degree": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "location": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "highlights": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        },
+        "metric_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "experienceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "organization",
+        "role",
+        "date",
+        "highlights",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "organization": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "role": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "date": {
+          "$ref": "#/$defs/dateRange"
+        },
+        "location": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "highlights": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "projectItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "technologies",
+        "highlights",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "date": {
+          "$ref": "#/$defs/dateRange"
+        },
+        "technologies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "highlights": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "activityItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "organization",
+        "role",
+        "date",
+        "highlights",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "organization": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "role": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "date": {
+          "$ref": "#/$defs/dateRange"
+        },
+        "location": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "highlights": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/statement"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "skillGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "items",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/localizedText"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
+    "sections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "education",
+        "experience",
+        "projects",
+        "activities",
+        "skills"
+      ],
+      "properties": {
+        "education": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/educationItem"
+          }
+        },
+        "experience": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/experienceItem"
+          }
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/projectItem"
+          }
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/activityItem"
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/skillGroup"
+          }
+        }
+      }
+    },
+    "pendingQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "question",
+        "related_path",
+        "blocking"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "question": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "related_path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "blocking": {
+          "type": "boolean"
+        }
+      }
+    },
+    "unresolvedItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_ref",
+        "raw_text",
+        "reason"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "raw_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "$ref": "#/$defs/localizedText"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "python-docx>=1.1,<2",
+# ]
+# ///
+"""Extract DOCX text as agent reference material."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+from docx import Document
+
+from lib.docx_extract import extract_docx_text
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Extract DOCX paragraphs, tables, headers, and footers for agent "
+            "reference. This is not a deterministic resume converter."
+        )
+    )
+    parser.add_argument("docx", type=Path)
+    parser.add_argument("-o", "--output", type=Path)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    if not args.docx.is_file():
+        print(f"DOCX not found: {args.docx}", file=sys.stderr)
+        return 1
+    try:
+        text = extract_docx_text(Document(args.docx))
+    except Exception as exc:
+        print(f"cannot read DOCX: {exc}", file=sys.stderr)
+        return 1
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(text, encoding="utf-8")
+        print(f"wrote: {args.output}")
+    else:
+        print(text, end="")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
