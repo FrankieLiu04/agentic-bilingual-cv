@@ -1,9 +1,10 @@
 # Template design system
 
-`cv.cls` contains the shared public layout system. `resume-en.tex` and
-`resume-zh.tex` are minimal language-specific skeletons used to exercise the
-class. `resume.tex.j2` is the shared M4 content template used to generate both
-language variants from structured YAML.
+`cv.cls` contains the shared public layout system. `resume.tex.j2` is the
+single content template used to generate both language variants from
+structured YAML; there are no hand-maintained per-language `.tex` skeletons.
+The fictional example renders the full pipeline and exercises the class in
+both languages.
 
 The style was independently reconstructed from layout characteristics of a
 private resume: compact A4 geometry, blue section accents, muted secondary

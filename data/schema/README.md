@@ -25,7 +25,7 @@ fact gathering and LaTeX authoring.
 - `fictional`: intentionally invented public test data, never user data.
 
 `source_refs` must point to IDs declared in the top-level `sources` list.
-The M4 semantic validator checks cross-reference integrity, global ID
+The semantic validator checks cross-reference integrity, global ID
 uniqueness, date ordering, unused metrics, workflow readiness, and separation
 between fictional and real data.
 

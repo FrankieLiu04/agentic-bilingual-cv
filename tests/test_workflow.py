@@ -84,13 +84,3 @@ def test_docx_reference_extraction_includes_layout_regions() -> None:
     assert "[body]" in extracted
     assert "Institution | 2024" in extracted
     assert "[footer]" in extracted
-
-
-def test_agent_skills_do_not_diverge() -> None:
-    codex = (REPO_ROOT / ".agents/skills/resume-builder/SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    claude = (REPO_ROOT / ".claude/skills/resume-builder/SKILL.md").read_text(
-        encoding="utf-8"
-    )
-    assert codex == claude

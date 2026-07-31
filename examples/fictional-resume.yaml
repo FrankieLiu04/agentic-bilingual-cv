@@ -16,8 +16,8 @@ sources:
     kind: fictional
     private: false
     description:
-      en: Invented M2 scenario; not derived from any real resume.
-      zh: M2 阶段创作的虚构情境，并非来自任何真实简历。
+      en: Invented example scenario; not derived from any real resume.
+      zh: 示例场景创作的虚构情境，并非来自任何真实简历。
 
 metrics:
   - id: gpa
@@ -29,7 +29,8 @@ metrics:
     display:
       en: 3.8/4.0
       zh: 3.8/4.0
-    verification:
+    # Shared fictional verification; aliased below to keep the example compact.
+    verification: &fictional_verification
       status: fictional
       source_refs: [fictional_brief]
 
@@ -39,9 +40,7 @@ metrics:
     display:
       en: 2 million records per day
       zh: 每日 200 万条记录
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: triage_reduction
     value: 35
@@ -49,9 +48,7 @@ metrics:
     display:
       en: 35%
       zh: 35%
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: coverage_before
     value: 62
@@ -59,9 +56,7 @@ metrics:
     display:
       en: 62%
       zh: 62%
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: coverage_after
     value: 86
@@ -69,9 +64,7 @@ metrics:
     display:
       en: 86%
       zh: 86%
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: operations_team_size
     value: 8
@@ -79,9 +72,7 @@ metrics:
     display:
       en: 8-person team
       zh: 8 人团队
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: report_time_before
     value: 4
@@ -89,9 +80,7 @@ metrics:
     display:
       en: 4 hours
       zh: 4 小时
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: report_time_after
     value: 45
@@ -99,9 +88,7 @@ metrics:
     display:
       en: 45 minutes
       zh: 45 分钟
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: indexed_abstracts
     value: 12000
@@ -109,9 +96,7 @@ metrics:
     display:
       en: 12,000 synthetic abstracts
       zh: 12,000 篇合成摘要
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: retrieval_before
     value: 71
@@ -119,9 +104,7 @@ metrics:
     display:
       en: 71%
       zh: 71%
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: retrieval_after
     value: 84
@@ -129,9 +112,7 @@ metrics:
     display:
       en: 84%
       zh: 84%
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: automated_tests
     value: 48
@@ -139,9 +120,7 @@ metrics:
     display:
       en: 48 automated tests
       zh: 48 项自动化测试
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: topology_nodes
     value: 50
@@ -149,9 +128,7 @@ metrics:
     display:
       en: 50-node topologies
       zh: 50 节点拓扑
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: generated_scenarios
     value: 120
@@ -159,9 +136,7 @@ metrics:
     display:
       en: 120 generated scenarios
       zh: 120 个生成场景
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: workshops
     value: 6
@@ -169,9 +144,7 @@ metrics:
     display:
       en: 6 workshops
       zh: 6 场工作坊
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: workshop_students
     value: 90
@@ -179,9 +152,7 @@ metrics:
     display:
       en: 90 students
       zh: 90 名学生
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
   - id: feedback_score
     value: 4.7
@@ -189,9 +160,7 @@ metrics:
     display:
       en: 4.7/5
       zh: 4.7/5
-    verification:
-      status: fictional
-      source_refs: [fictional_brief]
+    verification: *fictional_verification
 
 basics:
   name:
@@ -207,18 +176,12 @@ basics:
     - type: email
       value: avery.lin@example.com
       href: mailto:avery.lin@example.com
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+      verification: *fictional_verification
     - type: website
       value: example.com/avery-lin
       href: https://example.com/avery-lin
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
-  verification:
-    status: fictional
-    source_refs: [fictional_brief]
+      verification: *fictional_verification
+  verification: *fictional_verification
 
 sections:
   education:
@@ -241,13 +204,9 @@ sections:
             en: "Coursework: Data Structures, Distributed Systems, Databases, and Human-Computer Interaction."
             zh: 核心课程：数据结构、分布式系统、数据库与人机交互。
           metric_refs: []
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
+          verification: *fictional_verification
       metric_refs: [gpa]
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+      verification: *fictional_verification
 
   experience:
     - id: experience_lumenarc
@@ -269,20 +228,14 @@ sections:
             en: Built a Python event-validation service that processed 2 million simulated records per day and reduced manual triage time by 35%.
             zh: 构建 Python 事件验证服务，每日处理 200 万条模拟记录，将人工分流时间缩短 35%。
           metric_refs: [daily_records, triage_reduction]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
+          verification: *fictional_verification
         - id: lumenarc_testing
           text:
             en: Added contract and failure-path tests, increasing integration-test coverage from 62% to 86%.
             zh: 补充契约与故障路径测试，将集成测试覆盖率从 62% 提升至 86%。
           metric_refs: [coverage_before, coverage_after]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+          verification: *fictional_verification
+      verification: *fictional_verification
 
     - id: experience_cobalt_kite
       organization:
@@ -303,20 +256,14 @@ sections:
             en: Delivered a React operations dashboard for an 8-person team, cutting weekly report preparation from 4 hours to 45 minutes.
             zh: 为 8 人运营团队交付 React 仪表板，将每周报告准备时间从 4 小时缩短至 45 分钟。
           metric_refs: [operations_team_size, report_time_before, report_time_after]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
+          verification: *fictional_verification
         - id: cobalt_accessibility
           text:
             en: Reworked keyboard navigation and status labels to satisfy the team's internal accessibility checklist.
             zh: 重构键盘导航与状态标签，满足团队内部无障碍检查清单要求。
           metric_refs: []
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+          verification: *fictional_verification
+      verification: *fictional_verification
 
   projects:
     - id: project_atlasnote
@@ -333,20 +280,14 @@ sections:
             en: Indexed 12,000 synthetic abstracts and improved top-5 retrieval hit rate from 71% to 84% through query expansion.
             zh: 索引 12,000 篇合成摘要，通过查询扩展将前五项检索命中率从 71% 提升至 84%。
           metric_refs: [indexed_abstracts, retrieval_before, retrieval_after]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
+          verification: *fictional_verification
         - id: atlasnote_delivery
           text:
             en: Added bilingual citation previews, reproducible containers, and continuous integration for 48 automated tests.
             zh: 实现双语引文预览、可复现容器环境及覆盖 48 项自动化测试的持续集成。
           metric_refs: [automated_tests]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+          verification: *fictional_verification
+      verification: *fictional_verification
 
     - id: project_meshroute
       name:
@@ -362,12 +303,8 @@ sections:
             en: Visualized shortest paths and failure recovery across 50-node simulated topologies; verified behavior with 120 generated scenarios.
             zh: 可视化 50 节点模拟拓扑的最短路径与故障恢复，并通过 120 个生成场景验证行为。
           metric_refs: [topology_nodes, generated_scenarios]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+          verification: *fictional_verification
+      verification: *fictional_verification
 
   activities:
     - id: activity_open_lab
@@ -389,12 +326,8 @@ sections:
             en: Led 6 debugging workshops for 90 students, earning an average feedback score of 4.7/5.
             zh: 为 90 名学生主持 6 场调试工作坊，平均反馈评分为 4.7/5。
           metric_refs: [workshops, workshop_students, feedback_score]
-          verification:
-            status: fictional
-            source_refs: [fictional_brief]
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+          verification: *fictional_verification
+      verification: *fictional_verification
 
   skills:
     - id: skills_programming
@@ -407,9 +340,7 @@ sections:
         - {en: SQL, zh: SQL}
         - {en: Java, zh: Java}
         - {en: Bash, zh: Bash}
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+      verification: *fictional_verification
 
     - id: skills_tools
       label:
@@ -421,9 +352,7 @@ sections:
         - {en: PostgreSQL, zh: PostgreSQL}
         - {en: Linux, zh: Linux}
         - {en: GitHub Actions, zh: GitHub Actions}
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+      verification: *fictional_verification
 
     - id: skills_languages
       label:
@@ -432,9 +361,7 @@ sections:
       items:
         - {en: English (fluent), zh: 英语（流利）}
         - {en: Mandarin Chinese (fluent), zh: 普通话（流利）}
-      verification:
-        status: fictional
-        source_refs: [fictional_brief]
+      verification: *fictional_verification
 
 pending_questions: []
 unresolved_items: []

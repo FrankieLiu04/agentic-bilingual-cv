@@ -79,12 +79,10 @@ def validate_fonts(pdf: Path) -> int:
     return len(font_lines)
 
 
-def validate_log(pdf: Path, log_dir: Path | None, allow_missing: bool) -> None:
+def validate_log(pdf: Path, log_dir: Path | None) -> None:
     directory = log_dir if log_dir is not None else pdf.parent
     log = directory / f"{pdf.stem}.log"
     if not log.exists():
-        if allow_missing:
-            return
         raise ValidationError(f"{pdf}: expected LaTeX log not found: {log}")
     content = log.read_text(encoding="utf-8", errors="replace")
     matches = [
@@ -101,7 +99,6 @@ def validate_pdf(
     pdf: Path,
     expected_pages: int,
     log_dir: Path | None,
-    allow_missing_log: bool,
 ) -> list[str]:
     if not pdf.is_file() or pdf.stat().st_size == 0:
         raise ValidationError(f"{pdf}: PDF is missing or empty")
@@ -132,7 +129,7 @@ def validate_pdf(
         raise ValidationError(f"{pdf}: Author and Title metadata are required")
 
     font_count = validate_fonts(pdf)
-    validate_log(pdf, log_dir, allow_missing_log)
+    validate_log(pdf, log_dir)
 
     text = run(["pdftotext", "-layout", str(pdf), "-"])
     if len(text.strip()) < 20:
@@ -165,11 +162,6 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Directory containing matching LaTeX .log files",
     )
-    parser.add_argument(
-        "--allow-missing-log",
-        action="store_true",
-        help="Skip compilation-log checks when a matching log is absent",
-    )
     return parser.parse_args()
 
 
@@ -183,7 +175,6 @@ def main() -> int:
                 pdf.resolve(),
                 args.expected_pages,
                 args.log_dir.resolve() if args.log_dir else None,
-                args.allow_missing_log,
             )
             print(f"ok: {pdf}")
             for detail in details:

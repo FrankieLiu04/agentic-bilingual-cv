@@ -12,7 +12,8 @@ make render-example
 
 This validates the schema and semantic invariants, generates both editable
 LaTeX files, compiles both PDFs with XeLaTeX, checks PDF structure and LaTeX
-logs, runs unit tests, and scans public candidates for privacy leaks.
+logs, verifies the agent-skill copies are in sync, runs unit tests, and scans
+public candidates for privacy leaks.
 
 ## Private DOCX path
 

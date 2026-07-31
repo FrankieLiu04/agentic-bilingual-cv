@@ -11,7 +11,7 @@
 ### 项目介绍
 
 Agentic Bilingual CV 是一个面向 coding agent 的中英文简历模板仓库。你可以
-使用 Claude Code、Codex、Pi 或其他 coding agent，把已有 DOCX 简历作为参考
+使用 Claude Code、Codex 或其他 coding agent，把已有 DOCX 简历作为参考
 材料，或直接在对话中描述自己的经历。Agent 会协助整理事实、追问缺失信息、
 润色表述，并使用同一套设计体系生成中英文 LaTeX 与 PDF。
 
@@ -130,16 +130,14 @@ Git 追踪。仓库内只提供使用完全虚构数据构建的公开示例。
 
 ```bash
 make check-data
-make templates
 make examples
 make check
 make render-example
 ```
 
-`make check-data` 验证结构化 YAML。模板预览位于 `build/`，完整虚构示例
-位于 `build/examples/`。所有 PDF 都由 XeLaTeX 直接编译对应的 `.tex`
-文件。`make render-example` 将可编辑 LaTeX、PDF 和验证报告写入
-`output/example/`。
+`make check-data` 验证结构化 YAML。完整虚构示例位于 `build/examples/`：
+`.tex` 由共享模板生成，PDF 由 XeLaTeX 直接编译对应 `.tex` 文件并自动校验。
+`make render-example` 将可编辑 LaTeX、PDF 和验证报告写入 `output/example/`。
 
 处理自己的私密 YAML：
 
@@ -165,8 +163,8 @@ scripts/render data/private/resume.yaml --output-dir output
 ### 模板定制
 
 排版资源位于 `template/`。颜色、间距、字体、标题和区块样式由共享 class
-集中维护，中英文模板只保留必要的语言差异。定制模板时，请同时
-渲染两种语言并重新运行 `make check`。
+集中维护；`resume.tex.j2` 从同一份结构化数据生成中英文两种变体。
+定制模板时，请同时渲染两种语言并重新运行 `make check`。
 
 ### 常见问题
 
@@ -203,7 +201,7 @@ scripts/render data/private/resume.yaml --output-dir output
 ### About
 
 Agentic Bilingual CV is a resume template designed for use with coding agents
-such as Claude Code, Codex, Pi, and others. Provide an existing DOCX as
+such as Claude Code, Codex, and others. Provide an existing DOCX as
 reference material or describe your background in conversation. The agent
 organizes facts, asks follow-up questions, edits the writing, and produces
 English and Chinese LaTeX and PDFs within one visual system.
@@ -333,17 +331,16 @@ Run this at the repository root:
 
 ```bash
 make check-data
-make templates
 make examples
 make check
 make render-example
 ```
 
-`make check-data` validates the structured YAML. Template previews are written
-to `build/`, and complete fictional examples are written to `build/examples/`.
-Every PDF is compiled directly from its matching `.tex` file by XeLaTeX.
-`make render-example` writes editable LaTeX, PDFs, and the validation report to
-`output/example/`.
+`make check-data` validates the structured YAML. Complete fictional examples
+are written to `build/examples/`: `.tex` files are generated from the shared
+template, and every PDF is compiled directly from its matching `.tex` file by
+XeLaTeX and validated automatically. `make render-example` writes editable
+LaTeX, PDFs, and the validation report to `output/example/`.
 
 For private YAML:
 
@@ -372,9 +369,9 @@ to overwrite it silently. Replacement requires an explicit `--force`.
 ### Customizing the template
 
 Layout assets live in `template/`. Colors, spacing, typography, headings, and
-section styles are centralized in a shared class; language templates contain
-only necessary language-specific differences. Render
-and run `make check` after every visual change.
+section styles are centralized in a shared class, and `resume.tex.j2` generates
+both language variants from the same structured data. Render and run
+`make check` after every visual change.
 
 ### FAQ
 

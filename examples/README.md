@@ -35,8 +35,18 @@ make check-data
 make examples
 ```
 
-M4 validates the YAML, generates editable English and Chinese `.tex` files,
-compiles them directly with XeLaTeX, and validates the resulting PDFs.
+`make examples` validates the YAML, generates editable English and Chinese
+`.tex` files, compiles them directly with XeLaTeX, and validates the
+resulting PDFs.
+
+## Compact verification blocks
+
+Every claim in the YAML carries an explicit `verification` block for
+auditability. To avoid repeating the same object 38 times, the example
+defines one YAML anchor (`&fictional_verification` on the first metric's
+verification block) and reuses it with `*fictional_verification` aliases;
+`yaml.safe_load` resolves the aliases before schema validation. Real
+documents may use the same pattern or repeat the block explicitly.
 
 Generated artifacts are written to:
 

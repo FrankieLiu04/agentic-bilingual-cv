@@ -52,7 +52,7 @@ without compiling.
 ## Validate PDF
 
 ```bash
-scripts/validate \
+scripts/validate-pdf \
   --expected-pages 1 \
   --log-dir build/render/DOCUMENT_ID \
   output/resume-en.pdf output/resume-zh.pdf

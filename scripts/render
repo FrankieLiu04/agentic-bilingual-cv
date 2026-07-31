@@ -25,7 +25,7 @@ from lib.resume_data import ResumeDataError, validate_resume
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SCHEMA = REPO_ROOT / "data/schema/resume.schema.json"
 TEMPLATE_DIR = REPO_ROOT / "template"
-VALIDATOR = REPO_ROOT / "scripts/validate"
+VALIDATOR = REPO_ROOT / "scripts/validate-pdf"
 
 
 class RenderError(RuntimeError):

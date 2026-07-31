@@ -1,17 +1,14 @@
 # User-provided source material
 input/*
 !input/README.md
-!input/.gitkeep
 
 # Private structured resume data
 data/private/*
 !data/private/README.md
-!data/private/.gitkeep
 
 # Generated resumes and intermediate build files
 output/*
 !output/README.md
-!output/.gitkeep
 build/
 tmp/
 

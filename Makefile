@@ -1,27 +1,24 @@
-LATEX := xelatex
-LATEX_FLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
-TEMPLATE_DIR := template
 BUILD_DIR := build
-TEMPLATES := resume-en resume-zh
-PDFS := $(TEMPLATES:%=$(BUILD_DIR)/%.pdf)
 EXAMPLE_BUILD_DIR := $(BUILD_DIR)/examples
 EXAMPLE_COMPILE_DIR := $(BUILD_DIR)/example-compile
 EXAMPLE_DATA := examples/fictional-resume.yaml
 
-.PHONY: all check test privacy templates examples check-data \
-	validate-templates render-example en zh example-en example-zh clean
+SKILL_SOURCE := skills/resume-builder/SKILL.md
+SKILL_COPIES := .agents/skills/resume-builder/SKILL.md \
+	.claude/skills/resume-builder/SKILL.md
 
-all: templates examples
+.PHONY: all check test privacy examples check-data \
+	render-example skills skills-sync clean
 
-check: all validate-templates test privacy
+all: examples
+
+check: all skills-sync test privacy
 
 test:
 	scripts/test
 
 privacy:
 	scripts/privacy-scan
-
-templates: $(PDFS)
 
 examples: check-data
 	scripts/render $(EXAMPLE_DATA) \
@@ -32,28 +29,21 @@ examples: check-data
 check-data:
 	scripts/validate-data $(EXAMPLE_DATA)
 
-validate-templates: templates
-	scripts/validate --expected-pages 1 --log-dir $(BUILD_DIR) $(PDFS)
-
 render-example: check-data
 	scripts/render $(EXAMPLE_DATA) --output-dir output/example
 
-en: $(BUILD_DIR)/resume-en.pdf
+skills:
+	cp $(SKILL_SOURCE) .agents/skills/resume-builder/
+	cp $(SKILL_SOURCE) .claude/skills/resume-builder/
 
-zh: $(BUILD_DIR)/resume-zh.pdf
-
-example-en: examples
-
-example-zh: examples
-
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
-
-$(BUILD_DIR)/%.pdf: $(TEMPLATE_DIR)/%.tex $(TEMPLATE_DIR)/cv.cls | $(BUILD_DIR)
-	cd $(TEMPLATE_DIR) && $(LATEX) $(LATEX_FLAGS) \
-		-output-directory=../$(BUILD_DIR) $*.tex
-	cd $(TEMPLATE_DIR) && $(LATEX) $(LATEX_FLAGS) \
-		-output-directory=../$(BUILD_DIR) $*.tex
+skills-sync:
+	@for copy in $(SKILL_COPIES); do \
+		cmp -s $(SKILL_SOURCE) $$copy || { \
+			echo "out of sync: $$copy (run 'make skills')"; \
+			exit 1; \
+		}; \
+	done
+	@echo "ok: agent skill copies match $(SKILL_SOURCE)"
 
 clean:
 	@if [ -d "$(BUILD_DIR)" ]; then \
