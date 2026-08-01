@@ -60,7 +60,9 @@ scripts/validate-pdf \
 
 The validator rejects unexpected page counts or page sizes, unembedded fonts,
 empty metadata, broken text extraction, missing LaTeX logs, and LaTeX overflow,
-font, glyph, or package warnings.
+font, glyph, or package warnings. It also reports per-page fill percentages and
+softly suggests `document.layout.preset` changes when a page is too full
+(> 96%) or the last page is too sparse (< 70%).
 
 ## Extract text
 

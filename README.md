@@ -6,6 +6,17 @@
 > auditable YAML schema, Codex and Claude Code skills, a fictional end-to-end
 > example, automated PDF checks, privacy scanning, tests, and GitHub Actions.
 
+## Preview / 效果预览
+
+Both pages are rendered from the entirely fictional
+`examples/fictional-resume.yaml` by the repository pipeline:
+
+| English | 中文 |
+| --- | --- |
+| ![English sample resume](docs/preview/resume-en.png) | ![中文示例简历](docs/preview/resume-zh.png) |
+
+Regenerate the previews with `make preview`.
+
 ## 中文
 
 ### 项目介绍

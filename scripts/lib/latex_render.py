@@ -113,6 +113,7 @@ def render_latex(
             "education": "Education",
             "experience": "Experience",
             "projects": "Projects",
+            "awards": r"Honors \& Awards",
             "activities": "Leadership",
             "skills": "Skills",
             "title_suffix": "Resume",
@@ -121,6 +122,7 @@ def render_latex(
             "education": "教育经历",
             "experience": "工作经历",
             "projects": "项目经历",
+            "awards": "荣誉奖项",
             "activities": "领导力",
             "skills": "技能",
             "title_suffix": "简历",
@@ -129,10 +131,14 @@ def render_latex(
 
     basics = data["basics"]
     name = basics["name"][locale]
+    preset = data.get("document", {}).get("layout", {}).get("preset", "normal")
+    class_option = "english" if locale == "en" else "chinese"
+    if preset != "normal":
+        class_option = f"{class_option},{preset}"
     return template.render(
         data=data,
         locale=locale,
-        class_option="english" if locale == "en" else "chinese",
+        class_option=class_option,
         labels=labels,
         metadata_author=tex_escape(name),
         metadata_title=tex_escape(f"{name} - {labels['title_suffix']}"),

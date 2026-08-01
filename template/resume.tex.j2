@@ -68,6 +68,14 @@
 <% endfor %>
 <% endif %>
 
+<% if data.sections.get("awards") %>
+\cvsection{<< labels.awards >>}
+
+<% for item in data.sections.awards %>
+\cvaward{<< localized(item.title) >>}{<< date_text(item.date) >>}
+<% endfor %>
+<% endif %>
+
 <% if data.sections.activities %>
 \cvsection{<< labels.activities >>}
 

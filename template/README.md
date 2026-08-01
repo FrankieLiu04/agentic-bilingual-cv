@@ -20,11 +20,13 @@ are included.
 - `\cventry{primary}{date}{secondary}{location}` renders a two-row entry.
 - `cvitems` provides a compact bullet-list environment.
 - `\cvskill{label}{content}` renders a skill row.
+- `\cvaward{title}{date}` renders a compact one-line honors entry.
 - `\cvsep` separates contact items.
 
-Use the `english` or `chinese` document-class option. Both variants share the
-same spacing, semantic macros, and color system; section typography adapts to
-the language.
+Use the `english` or `chinese` language option, plus an optional `compact` or
+`airy` spacing preset (`normal` is the default). Both variants share the same
+semantic macros and color system; section typography and spacing adapt to the
+language and preset.
 
 The Jinja template uses `<< value >>` and `<% block %>` delimiters so its syntax
 does not conflict with LaTeX braces. Generated `.tex` files are ordinary,

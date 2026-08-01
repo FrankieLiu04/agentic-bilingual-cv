@@ -3,11 +3,42 @@
 
 \newif\ifcvchinese
 \cvchinesefalse
+\newif\ifcvcompact
+\cvcompactfalse
+\newif\ifcvairy
+\cvairyfalse
 
 \DeclareOption{english}{\cvchinesefalse}
 \DeclareOption{chinese}{\cvchinesetrue}
+\DeclareOption{compact}{\cvcompacttrue}
+\DeclareOption{airy}{\cvairytrue}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
+
+\ifcvcompact
+  \newcommand{\cvspacinglinespread}{1.04}
+  \newcommand{\cvspacingheader}{-5pt}
+  \newcommand{\cvspacingbefore}{6pt}
+  \newcommand{\cvspacingafter}{3pt}
+  \newcommand{\cvspacingitems}{2pt}
+  \newcommand{\cvspacingtrailing}{1pt}
+\else
+  \ifcvairy
+    \newcommand{\cvspacinglinespread}{1.20}
+    \newcommand{\cvspacingheader}{0pt}
+    \newcommand{\cvspacingbefore}{14pt}
+    \newcommand{\cvspacingafter}{6pt}
+    \newcommand{\cvspacingitems}{5pt}
+    \newcommand{\cvspacingtrailing}{4pt}
+  \else
+    \newcommand{\cvspacinglinespread}{1.12}
+    \newcommand{\cvspacingheader}{-2pt}
+    \newcommand{\cvspacingbefore}{10pt}
+    \newcommand{\cvspacingafter}{4pt}
+    \newcommand{\cvspacingitems}{3pt}
+    \newcommand{\cvspacingtrailing}{2pt}
+  \fi
+\fi
 
 \LoadClass[10pt,a4paper]{article}
 
@@ -83,7 +114,7 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{0pt}
-\linespread{1.0}
+\linespread{1.12}
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
 \emergencystretch=2em
@@ -103,26 +134,26 @@
     \vspace{2pt}
     {\small #3}
   \end{center}
-  \vspace{-5pt}
+  \vspace{\cvspacingheader}
 }
 
 \ifcvchinese
   \newcommand{\cvsecondary}[1]{{\color{cvmuted}#1}}
   \newcommand{\cvsection}[1]{%
-    \vspace{5pt}
+    \vspace{\cvspacingbefore}
     \noindent
     {\color{cvaccent}\rule{3pt}{13pt}}\hspace{6pt}%
     {\color{cvaccent}\cvheadingfont\fontsize{13}{15}\selectfont #1}\hspace{8pt}%
     {\color{cvrule}\leaders\hrule height 0.35pt\hfill\kern0pt}\par
-    \vspace{2pt}
+    \vspace{\cvspacingafter}
   }
 \else
   \newcommand{\cvsecondary}[1]{{\color{cvmuted}\itshape #1}}
   \newcommand{\cvsection}[1]{%
-    \vspace{5pt}
+    \vspace{\cvspacingbefore}
     {\color{cvaccent}\large\cvheadingfont\MakeUppercase{#1}}\par
     \vspace{1pt}{\color{cvaccent}\hrule height 0.8pt}
-    \vspace{2pt}
+    \vspace{\cvspacingafter}
   }
 \fi
 
@@ -134,15 +165,19 @@
 }
 
 \newcommand{\cvskill}[2]{%
-  \textbf{#1}\hspace{4pt}#2\par
+  \textbf{#1}\hspace{4pt}#2\par\vspace{\cvspacingtrailing}
+}
+
+\newcommand{\cvaward}[2]{%
+  \textbf{#1}\hfill{\small #2}\par\vspace{\cvspacingtrailing}
 }
 
 \newenvironment{cvitems}{%
   \begin{list}{\color{cvaccent}\raisebox{0.25ex}{\scriptsize\textbullet}}{%
-    \setlength{\itemsep}{1pt}%
+    \setlength{\itemsep}{\cvspacingitems}%
     \setlength{\parskip}{0pt}%
     \setlength{\parsep}{0pt}%
-    \setlength{\topsep}{1pt}%
+    \setlength{\topsep}{\cvspacingitems}%
     \setlength{\partopsep}{0pt}%
     \setlength{\leftmargin}{15pt}%
     \setlength{\labelsep}{6pt}%
@@ -150,6 +185,7 @@
   }%
 }{%
   \end{list}%
+  \vspace{\cvspacingtrailing}%
 }
 
 \endinput

@@ -60,9 +60,16 @@ The generated PDFs must always come directly from LaTeX.
    scripts/render data/private/resume.yaml --output-dir output
    ```
 
-6. Inspect `output/validation-report.txt`, extract PDF text when useful, render
-   every PDF page to images, and visually check both languages.
-7. Iterate on YAML wording first. Edit generated LaTeX only for deliberate
+6. Inspect `output/validation-report.txt` (including per-page fill
+   percentages), extract PDF text when useful, render every PDF page to
+   images, and visually check both languages.
+7. Tune the final display using the fill report before changing facts:
+   - a last page above 96% full prefers `document.layout.preset: compact` or
+     tightened wording;
+   - a last page below 70% full prefers `document.layout.preset: airy` or
+     additional relevant content;
+   - re-render and re-inspect until spacing and fill look comfortable.
+8. Iterate on YAML wording first. Edit generated LaTeX only for deliberate
    final layout refinements.
 
 ## Page fitting
@@ -72,7 +79,8 @@ When content exceeds the target page count, adjust in this order:
 1. remove repetition and tighten wording without changing facts;
 2. prioritize the most relevant content with the user;
 3. reduce low-value detail or move it to an optional longer version;
-4. adjust spacing conservatively.
+4. use `document.layout.preset` (`compact` / `normal` / `airy`) or adjust
+   spacing conservatively.
 
 Do not preserve one page by repeatedly shrinking type, margins, or line spacing
 until readability suffers.

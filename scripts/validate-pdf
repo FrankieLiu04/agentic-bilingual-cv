@@ -24,6 +24,7 @@ LOG_FAILURES = (
     re.compile(r"^!", re.MULTILINE),
 )
 BAD_TEXT_GLYPHS = ("\ufffd", "\u25a0", "\u25a1")
+TOP_BOTTOM_MARGIN_PT = 32.6  # cv.cls geometry uses 1.15cm top/bottom margins
 
 
 class ValidationError(RuntimeError):
@@ -58,6 +59,35 @@ def parse_pdfinfo(output: str) -> dict[str, str]:
         if separator:
             result[key.strip()] = value.strip()
     return result
+
+
+def compute_page_fills(pdf: Path) -> list[float]:
+    """Return the fraction of the usable text area covered on each page."""
+    output = run(["pdftotext", "-bbox", str(pdf), "-"])
+    pages: list[dict[str, float]] = []
+    current: dict[str, float] | None = None
+    for line in output.splitlines():
+        page_match = re.search(
+            r'<page width="([0-9.]+)" height="([0-9.]+)">', line
+        )
+        if page_match:
+            current = {"height": float(page_match.group(2)), "max_y": 0.0}
+            pages.append(current)
+            continue
+        y_match = re.search(r'yMax="([0-9.]+)"', line)
+        if y_match is not None and current is not None:
+            current["max_y"] = max(current["max_y"], float(y_match.group(1)))
+
+    fills: list[float] = []
+    for page in pages:
+        usable = page["height"] - 2 * TOP_BOTTOM_MARGIN_PT
+        if usable <= 0:
+            fills.append(0.0)
+            continue
+        fills.append(
+            max(0.0, min(1.0, (page["max_y"] - TOP_BOTTOM_MARGIN_PT) / usable))
+        )
+    return fills
 
 
 def validate_fonts(pdf: Path) -> int:
@@ -99,7 +129,7 @@ def validate_pdf(
     pdf: Path,
     expected_pages: int,
     log_dir: Path | None,
-) -> list[str]:
+) -> tuple[list[str], list[str]]:
     if not pdf.is_file() or pdf.stat().st_size == 0:
         raise ValidationError(f"{pdf}: PDF is missing or empty")
 
@@ -138,14 +168,32 @@ def validate_pdf(
     if bad:
         raise ValidationError(f"{pdf}: extracted text contains broken glyphs")
 
-    return [
+    fills = compute_page_fills(pdf)
+    fill_text = ", ".join(f"{round(fill * 100)}%" for fill in fills)
+    warnings: list[str] = []
+    if fills:
+        last_fill = fills[-1]
+        if last_fill > 0.96:
+            warnings.append(
+                f"{pdf}: last page is {round(last_fill * 100)}% full; "
+                "consider layout.preset compact or trimming content"
+            )
+        elif last_fill < 0.70:
+            warnings.append(
+                f"{pdf}: last page is {round(last_fill * 100)}% full; "
+                "consider layout.preset airy or adding content"
+            )
+
+    details = [
         f"pages={pages}",
         "size=A4",
         f"fonts={font_count} embedded",
         f"author={author}",
         f"title={title}",
         f"text_chars={len(text.strip())}",
+        f"fill={fill_text}",
     ]
+    return details, warnings
 
 
 def parse_args() -> argparse.Namespace:
@@ -171,7 +219,7 @@ def main() -> int:
         for command in ("pdfinfo", "pdffonts", "pdftotext"):
             require_command(command)
         for pdf in args.pdf:
-            details = validate_pdf(
+            details, warnings = validate_pdf(
                 pdf.resolve(),
                 args.expected_pages,
                 args.log_dir.resolve() if args.log_dir else None,
@@ -179,6 +227,8 @@ def main() -> int:
             print(f"ok: {pdf}")
             for detail in details:
                 print(f"  {detail}")
+            for warning in warnings:
+                print(f"  note: {warning}")
     except ValidationError as exc:
         print(f"validation failed: {exc}", file=sys.stderr)
         return 1

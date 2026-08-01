@@ -61,12 +61,27 @@ def test_optional_locations_and_project_dates_can_be_omitted() -> None:
             item.pop("location", None)
     for project in data["sections"]["projects"]:
         project.pop("date", None)
+    data["sections"].pop("awards")
 
     assert schema_errors(data, load_schema(SCHEMA)) == []
     assert semantic_errors(data) == []
     for locale in ("en", "zh"):
         rendered = render_latex(data, locale, REPO_ROOT / "template")
         assert r"\begin{document}" in rendered
+
+
+def test_awards_section_renders() -> None:
+    data = copy.deepcopy(load_yaml(EXAMPLE))
+    rendered = render_latex(data, "en", REPO_ROOT / "template")
+    assert r"Honors \& Awards" in rendered
+    assert "Regional Silver" in rendered
+
+
+def test_layout_preset_renders_class_option() -> None:
+    data = copy.deepcopy(load_yaml(EXAMPLE))
+    data["document"]["layout"] = {"preset": "airy"}
+    rendered = render_latex(data, "en", REPO_ROOT / "template")
+    assert r"\documentclass[english,airy]{cv}" in rendered
 
 
 def test_docx_reference_extraction_includes_layout_regions() -> None:

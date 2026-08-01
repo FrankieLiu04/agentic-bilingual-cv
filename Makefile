@@ -2,13 +2,14 @@ BUILD_DIR := build
 EXAMPLE_BUILD_DIR := $(BUILD_DIR)/examples
 EXAMPLE_COMPILE_DIR := $(BUILD_DIR)/example-compile
 EXAMPLE_DATA := examples/fictional-resume.yaml
+PREVIEW_DIR := docs/preview
 
 SKILL_SOURCE := skills/resume-builder/SKILL.md
 SKILL_COPIES := .agents/skills/resume-builder/SKILL.md \
 	.claude/skills/resume-builder/SKILL.md
 
 .PHONY: all check test privacy examples check-data \
-	render-example skills skills-sync clean
+	render-example preview skills skills-sync clean
 
 all: examples
 
@@ -31,6 +32,13 @@ check-data:
 
 render-example: check-data
 	scripts/render $(EXAMPLE_DATA) --output-dir output/example
+
+preview: examples
+	mkdir -p $(PREVIEW_DIR)
+	pdftoppm -png -r 150 -f 1 -l 1 $(EXAMPLE_BUILD_DIR)/resume-en.pdf $(PREVIEW_DIR)/resume-en
+	mv $(PREVIEW_DIR)/resume-en-1.png $(PREVIEW_DIR)/resume-en.png
+	pdftoppm -png -r 150 -f 1 -l 1 $(EXAMPLE_BUILD_DIR)/resume-zh.pdf $(PREVIEW_DIR)/resume-zh
+	mv $(PREVIEW_DIR)/resume-zh-1.png $(PREVIEW_DIR)/resume-zh.png
 
 skills:
 	cp $(SKILL_SOURCE) .agents/skills/resume-builder/

@@ -4,12 +4,14 @@ document:
   id: avery_lin_fictional
   fictional: true
   target_pages: 1
+  layout:
+    preset: normal
 
 workflow:
   status: render_ready
   notes:
-    en: Entirely fictional public data for schema and template testing.
-    zh: 用于 schema 与模板测试的完全虚构公开数据。
+    en: Entirely fictional autumn-recruitment example modeling a top-tier CS student with a startup internship and a big-tech internship.
+    zh: 完全虚构的秋招简历示例，模拟一名拥有初创公司实习与大厂实习的顶尖 CS 学生。
 
 sources:
   - id: fictional_brief
@@ -21,49 +23,76 @@ sources:
 
 metrics:
   - id: gpa
-    value: 3.8
+    value: 3.9
     unit: gpa_of_4
     label:
       en: GPA
       zh: 平均绩点
     display:
-      en: 3.8/4.0
-      zh: 3.8/4.0
+      en: 3.9/4.0
+      zh: 3.9/4.0
     # Shared fictional verification; aliased below to keep the example compact.
     verification: &fictional_verification
       status: fictional
       source_refs: [fictional_brief]
 
-  - id: daily_records
-    value: 2000000
-    unit: records_per_day
+  - id: class_rank
+    value: 3
+    unit: top_percent
+    label:
+      en: Rank
+      zh: 排名
     display:
-      en: 2 million records per day
-      zh: 每日 200 万条记录
+      en: top 3% of 300
+      zh: 300 人中前 3%
     verification: *fictional_verification
 
-  - id: triage_reduction
-    value: 35
-    unit: percent
+  - id: scholarship_years
+    value: 2
+    unit: years
     display:
-      en: 35%
-      zh: 35%
+      en: two consecutive years
+      zh: 连续两年
     verification: *fictional_verification
 
-  - id: coverage_before
-    value: 62
-    unit: percent
+  - id: cache_latency_before
+    value: 120
+    unit: milliseconds
     display:
-      en: 62%
-      zh: 62%
+      en: 120 ms
+      zh: 120 ms
     verification: *fictional_verification
 
-  - id: coverage_after
-    value: 86
-    unit: percent
+  - id: cache_latency_after
+    value: 45
+    unit: milliseconds
     display:
-      en: 86%
-      zh: 86%
+      en: 45 ms
+      zh: 45 ms
+    verification: *fictional_verification
+
+  - id: peak_qps
+    value: 120000
+    unit: queries_per_second
+    display:
+      en: 120k QPS
+      zh: 12 万 QPS
+    verification: *fictional_verification
+
+  - id: kafka_throughput
+    value: 20000
+    unit: events_per_second
+    display:
+      en: 20k events/s
+      zh: 2 万条事件/秒
+    verification: *fictional_verification
+
+  - id: integration_tests
+    value: 40
+    unit: tests
+    display:
+      en: 40 automated tests
+      zh: 40 项自动化测试
     verification: *fictional_verification
 
   - id: operations_team_size
@@ -122,6 +151,22 @@ metrics:
       zh: 48 项自动化测试
     verification: *fictional_verification
 
+  - id: kv_qps
+    value: 18000
+    unit: operations_per_second
+    display:
+      en: 18k ops/s
+      zh: 1.8 万次操作/秒
+    verification: *fictional_verification
+
+  - id: kv_failover
+    value: 3
+    unit: seconds
+    display:
+      en: 3-second leader failover
+      zh: 3 秒完成主节点切换
+    verification: *fictional_verification
+
   - id: topology_nodes
     value: 50
     unit: nodes
@@ -167,8 +212,8 @@ basics:
     en: Avery Lin
     zh: 林艾文
   headline:
-    en: Software Engineer
-    zh: 软件工程师
+    en: Backend Software Engineer
+    zh: 后端开发工程师
   location:
     en: Port Aurora
     zh: 曙港
@@ -190,32 +235,38 @@ sections:
         en: Aster Vale Institute of Technology
         zh: 星谷理工学院
       date:
-        start: "2021"
-        end: "2025"
+        start: "2021-09"
+        end: "2025-06"
       degree:
-        en: B.Eng. in Computer Engineering
-        zh: 计算机工程学士
+        en: B.Eng. in Computer Science
+        zh: 计算机科学与技术（本科）
       location:
         en: Port Aurora
         zh: 曙港
       highlights:
         - id: education_coursework
           text:
-            en: "Coursework: Data Structures, Distributed Systems, Databases, and Human-Computer Interaction."
-            zh: 核心课程：数据结构、分布式系统、数据库与人机交互。
+            en: "Coursework: Data Structures, Operating Systems, Computer Networks, Distributed Systems, Databases, Machine Learning."
+            zh: 核心课程：数据结构、操作系统、计算机网络、分布式系统、数据库、机器学习。
           metric_refs: []
+          verification: *fictional_verification
+        - id: education_scholarship
+          text:
+            en: Awarded the University Presidential Scholarship for two consecutive years, ranking top 3% of 300 students.
+            zh: 连续两年获得校优秀学生奖学金，位列 300 名学生前 3%。
+          metric_refs: [scholarship_years, class_rank]
           verification: *fictional_verification
       metric_refs: [gpa]
       verification: *fictional_verification
 
   experience:
-    - id: experience_lumenarc
+    - id: experience_nebula_cloud
       organization:
-        en: LumenArc Systems
-        zh: 流光系统
+        en: Nebula Cloud
+        zh: 星云科技
       role:
-        en: Software Engineering Intern
-        zh: 软件工程实习生
+        en: Backend Engineer Intern
+        zh: 后端开发实习生
       date:
         start: "2024-05"
         end: "2024-08"
@@ -223,17 +274,17 @@ sections:
         en: Port Aurora
         zh: 曙港
       highlights:
-        - id: lumenarc_validation
+        - id: nebula_cache
           text:
-            en: Built a Python event-validation service that processed 2 million simulated records per day and reduced manual triage time by 35%.
-            zh: 构建 Python 事件验证服务，每日处理 200 万条模拟记录，将人工分流时间缩短 35%。
-          metric_refs: [daily_records, triage_reduction]
+            en: Designed a Redis cache layer for the order-query service, cutting p99 latency from 120 ms to 45 ms at 120k QPS.
+            zh: 为订单查询服务设计 Redis 缓存层，在 12 万 QPS 下将 p99 延迟从 120 ms 降至 45 ms。
+          metric_refs: [cache_latency_before, cache_latency_after, peak_qps]
           verification: *fictional_verification
-        - id: lumenarc_testing
+        - id: nebula_kafka
           text:
-            en: Added contract and failure-path tests, increasing integration-test coverage from 62% to 86%.
-            zh: 补充契约与故障路径测试，将集成测试覆盖率从 62% 提升至 86%。
-          metric_refs: [coverage_before, coverage_after]
+            en: Built a Kafka event pipeline processing 20k events/s and added 40 integration tests for the delivery-notification flow.
+            zh: 搭建 Kafka 事件管道，每秒处理 2 万条事件，并为发货通知链路补充 40 项集成测试。
+          metric_refs: [kafka_throughput, integration_tests]
           verification: *fictional_verification
       verification: *fictional_verification
 
@@ -245,7 +296,7 @@ sections:
         en: Product Engineering Intern
         zh: 产品工程实习生
       date:
-        start: "2023-06"
+        start: "2023-07"
         end: "2023-08"
       location:
         en: Port Aurora
@@ -268,24 +319,47 @@ sections:
   projects:
     - id: project_atlasnote
       name:
-        en: AtlasNote - Bilingual Research Assistant
-        zh: AtlasNote 双语研究助手
+        en: AtlasNote - RAG Research Assistant
+        zh: AtlasNote 检索增强研究助手
       date:
         start: "2024"
         end: "2024"
-      technologies: [FastAPI, PostgreSQL, React, Docker]
+      technologies: [Python, FastAPI, PostgreSQL, React, Docker]
       highlights:
         - id: atlasnote_retrieval
           text:
-            en: Indexed 12,000 synthetic abstracts and improved top-5 retrieval hit rate from 71% to 84% through query expansion.
+            en: Indexed 12,000 synthetic abstracts and improved top-5 retrieval hit rate from 71% to 84% with query expansion.
             zh: 索引 12,000 篇合成摘要，通过查询扩展将前五项检索命中率从 71% 提升至 84%。
           metric_refs: [indexed_abstracts, retrieval_before, retrieval_after]
           verification: *fictional_verification
         - id: atlasnote_delivery
           text:
-            en: Added bilingual citation previews, reproducible containers, and continuous integration for 48 automated tests.
-            zh: 实现双语引文预览、可复现容器环境及覆盖 48 项自动化测试的持续集成。
+            en: Added bilingual citation previews and CI for 48 automated tests.
+            zh: 实现双语引文预览及覆盖 48 项自动化测试的持续集成。
           metric_refs: [automated_tests]
+          verification: *fictional_verification
+      verification: *fictional_verification
+
+    - id: project_minikv
+      name:
+        en: MiniKV - Raft-based Distributed KV Store
+        zh: MiniKV 基于 Raft 的分布式键值存储
+      date:
+        start: "2023"
+        end: "2023"
+      technologies: [Go, gRPC, Raft]
+      highlights:
+        - id: minikv_consensus
+          text:
+            en: Implemented leader election, log replication, and snapshotting in Go with gRPC on a 5-node cluster.
+            zh: 使用 Go 与 gRPC 在 5 节点集群上实现选举、日志复制与快照。
+          metric_refs: []
+          verification: *fictional_verification
+        - id: minikv_performance
+          text:
+            en: Sustained 18k ops/s with 3-second leader failover under simulated partitions.
+            zh: 在模拟网络分区下维持 1.8 万次操作/秒，主节点 3 秒内完成切换。
+          metric_refs: [kv_qps, kv_failover]
           verification: *fictional_verification
       verification: *fictional_verification
 
@@ -300,10 +374,31 @@ sections:
       highlights:
         - id: meshroute_simulation
           text:
-            en: Visualized shortest paths and failure recovery across 50-node simulated topologies; verified behavior with 120 generated scenarios.
-            zh: 可视化 50 节点模拟拓扑的最短路径与故障恢复，并通过 120 个生成场景验证行为。
+            en: Visualized shortest paths and failure recovery across 50-node topologies, verified with 120 generated scenarios.
+            zh: 可视化 50 节点拓扑的最短路径与故障恢复，并通过 120 个生成场景验证。
           metric_refs: [topology_nodes, generated_scenarios]
           verification: *fictional_verification
+      verification: *fictional_verification
+
+  awards:
+    - id: award_algorithm_contest
+      title:
+        en: East Asia Collegiate Algorithm Contest - Regional Silver
+        zh: 东亚大学生算法竞赛 区域赛银奖
+      date:
+        start: "2023-11"
+        end: "2023-11"
+      metric_refs: []
+      verification: *fictional_verification
+
+    - id: award_cloud_hackathon
+      title:
+        en: CloudHack - Best Cloud Innovation Award (120 teams)
+        zh: CloudHack 云端黑客松 最佳云创新奖（120 支队伍）
+      date:
+        start: "2024-05"
+        end: "2024-05"
+      metric_refs: []
       verification: *fictional_verification
 
   activities:
@@ -330,37 +425,40 @@ sections:
       verification: *fictional_verification
 
   skills:
-    - id: skills_programming
+    - id: skills_languages
       label:
-        en: Programming
+        en: Languages
         zh: 编程语言
       items:
+        - {en: C++, zh: C++}
+        - {en: Go, zh: Go}
         - {en: Python, zh: Python}
-        - {en: TypeScript, zh: TypeScript}
-        - {en: SQL, zh: SQL}
         - {en: Java, zh: Java}
-        - {en: Bash, zh: Bash}
+        - {en: SQL, zh: SQL}
+      verification: *fictional_verification
+
+    - id: skills_frameworks
+      label:
+        en: Frameworks & Middleware
+        zh: 框架与中间件
+      items:
+        - {en: gRPC, zh: gRPC}
+        - {en: Redis, zh: Redis}
+        - {en: Kafka, zh: Kafka}
+        - {en: MySQL, zh: MySQL}
+        - {en: React, zh: React}
       verification: *fictional_verification
 
     - id: skills_tools
       label:
-        en: Tools
-        zh: 工具平台
+        en: Tools & Practices
+        zh: 工具与工程实践
       items:
         - {en: Git, zh: Git}
-        - {en: Docker, zh: Docker}
-        - {en: PostgreSQL, zh: PostgreSQL}
         - {en: Linux, zh: Linux}
+        - {en: Docker, zh: Docker}
+        - {en: Kubernetes, zh: Kubernetes}
         - {en: GitHub Actions, zh: GitHub Actions}
-      verification: *fictional_verification
-
-    - id: skills_languages
-      label:
-        en: Languages
-        zh: 语言能力
-      items:
-        - {en: English (fluent), zh: 英语（流利）}
-        - {en: Mandarin Chinese (fluent), zh: 普通话（流利）}
       verification: *fictional_verification
 
 pending_questions: []

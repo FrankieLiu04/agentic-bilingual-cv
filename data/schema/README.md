@@ -11,12 +11,25 @@ fact gathering and LaTeX authoring.
   source does not provide it; never infer one merely to fill the layout.
 - Store every quantitative fact once in `metrics`. Statements refer to metrics
   through `metric_refs`.
+- `sections.awards` is optional; it renders compact one-line honors and
+  competition entries for autumn-recruitment style resumes.
 - Attach a verification status and source references to each claim-bearing
   item.
 - Keep uncertain questions in `pending_questions`.
 - Keep unreadable or unclassified source material in `unresolved_items`; never
   silently discard it.
 - A document marked `render_ready` must have no pending or unresolved items.
+
+## Layout presets
+
+`document.layout.preset` is optional and selects a shared spacing preset:
+
+- `compact`: dense spacing for content that overflows the target;
+- `normal`: the default;
+- `airy`: relaxed spacing for thin content.
+
+The PDF validator reports per-page fill percentages, so the final display pass
+can choose a preset before changing wording.
 
 ## Verification statuses
 

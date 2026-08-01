@@ -39,6 +39,19 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 3
+        },
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "preset": {
+              "enum": [
+                "compact",
+                "normal",
+                "airy"
+              ]
+            }
+          }
         }
       }
     },
@@ -479,6 +492,37 @@
         }
       }
     },
+    "awardItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "date",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "date": {
+          "$ref": "#/$defs/dateRange"
+        },
+        "metric_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        }
+      }
+    },
     "skillGroup": {
       "type": "object",
       "additionalProperties": false,
@@ -534,6 +578,12 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/projectItem"
+          }
+        },
+        "awards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/awardItem"
           }
         },
         "activities": {

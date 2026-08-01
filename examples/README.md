@@ -18,12 +18,14 @@ compact review aid; the YAML document is authoritative.
 
 | Area | Canonical fictional facts |
 | --- | --- |
-| Identity | Avery Lin / 林艾文; software engineer; Port Aurora / 曙港 |
-| Education | Aster Vale Institute of Technology / 星谷理工学院; 2021-2025; B.Eng. Computer Engineering; GPA 3.8/4.0 |
-| LumenArc | May-Aug 2024; 2 million simulated records/day; 35% less triage time; integration-test coverage 62%-86% |
-| Cobalt Kite | Jun-Aug 2023; 8-person team; weekly reporting reduced from 4 hours to 45 minutes |
-| AtlasNote | 2024; 12,000 synthetic abstracts; top-5 hit rate 71%-84%; 48 automated tests |
-| MeshRoute | 2023; 50-node simulated topologies; 120 generated scenarios |
+| Identity | Avery Lin / 林艾文; backend software engineer; Port Aurora / 曙港 |
+| Education | Aster Vale Institute of Technology / 星谷理工学院; 2021-2025; B.Eng. Computer Science; GPA 3.9/4.0; top 3% of 300; two-year Presidential Scholarship |
+| Nebula Cloud (big tech) | May-Aug 2024; Redis cache cut p99 latency from 120 ms to 45 ms at 120k QPS; Kafka pipeline at 20k events/s; 40 integration tests |
+| Cobalt Kite (startup) | Jul-Aug 2023; 8-person team; weekly reporting reduced from 4 hours to 45 minutes; accessibility rework |
+| AtlasNote | 2024; RAG research assistant; 12,000 synthetic abstracts; top-5 hit rate 71%-84%; 48 automated tests |
+| MiniKV | 2023; Go + Raft + gRPC; 18k ops/s; 3-second leader failover |
+| MeshRoute | 2023; 50-node topologies; 120 generated scenarios |
+| Awards | 2023 East Asia Algorithm Contest regional silver; 2024 CloudHack best cloud innovation award (120 teams) |
 | Leadership | 2022-2024; 6 workshops; 90 students; average feedback 4.7/5 |
 
 ## Build
